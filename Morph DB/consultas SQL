@@ -1,0 +1,14 @@
+SELECT sfn.idsystemfilesname, sfn.name, sf.version FROM systemfilesname sfn inner join systemfiles sf on sfn.idsystemfilesname = sf.idsystemfilesname WHERE sf.version in (SELECT MAX(sf_.version) FROM systemfiles sf_ where sf_.idsystemfilesname = sfn.idsystemfilesname) ORDER BY sfn.idsystemfilesname
+
+select a.name, af.activityname, af.version from app a inner join activityfile af on af.appname = a.name  where af.version in (SELECT MAX(af_.version) from activityfile af_ where af.appname = af_.appname) and a.name = ''
+
+
+SELECT a.name, af.activityname, af.version, aty.type, af.xml as file 
+FROM app a 
+INNER JOIN activity act ON a.name = act.appname 
+INNER JOIN activitytype aty on act.idactivitytype = aty.idactivitytype
+INNER JOIN activityfile af on af.appname = a.name 
+WHERE af.version in 
+(SELECT MAX(af_.version) from activityfile af_ where af.appname = af_.appname)
+
+SELECT a.name, af.activityname, af.version, aty.type, af.xml as file FROM app a INNER JOIN activity act ON a.name = act.appname INNER JOIN activitytype aty on act.idactivitytype = aty.idactivitytype RIGHT JOIN activityfile af on af.appname = a.name and af.activityname = act.activityname WHERE af.version in (SELECT MAX(af_.version) from activityfile af_ where af.appname = af_.appname and af.activityname = af_.activityname)

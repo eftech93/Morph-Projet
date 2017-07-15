@@ -1,0 +1,60 @@
+function m_run(olddata)
+	jsonarray = parser:stringToJSONArray(olddata:get(0))
+	als = fh:readFromFile(context, 'userdata.dat')
+	toupdate = luajava.newInstance('java.util.ArrayList')
+	arrsession = luajava.newInstance('java.util.ArrayList')
+	localappname = ''
+	if jsonarray:length() == 0 then
+		superdialog:openDialog(context,'Error', 'App does not exist')
+		return
+	end
+	for i = 0, jsonarray:length() - 1, 1 do 
+		jsondata = jsonarray:getJSONObject(i) 
+		strappname = jsondata:getString('name') 
+		if i == 0 then
+			localappname = jsondata:getString('name')
+		end
+		stractivityname = jsondata:getString('activityname') 
+		strversion = jsondata:getString('version') 
+		for j = 0, als:size() - 1, 1 do 
+			linesplited = utils:split(als:get(j), ';')  
+			strnamestored = linesplited:get(0)  
+			stractivtynamestored = linesplited:get(1)  
+			strversionstored = linesplited:get(2)  
+			if strnamestored == strappname then 
+				if stractivtynamestored == stractivityname then 
+					if strversion ~= strversionstored then 
+            			toupdate:add(strnamestored .. '.' .. stractivtynamestored)
+            		end  
+            	end
+            end
+		end
+	end
+	if toupdate:size() > 0 then  
+    	updateappfiles2 = utils:join(fh:readFromFile(context, 'updateappfiles2.dat'), ' ') 
+		olddata:remove(0)  
+		sb =luajava.newInstance('java.lang.StringBuilder')  
+		sb:append('bring=')  
+		for j = 0, toupdate:size() - 1 , 1 do  
+            sb:append(toupdate:get(j))  
+            w = toupdate:size() - 1  
+            if j ~=  w then  
+           		sb:append(',') 
+            end  
+		end 
+		array_ = luajava.newInstance('java.util.ArrayList')  
+        array_:add('https://tryxml.000webhostapp.com/morph-test/testing.php')  
+		array_:add('act=bsaa')  
+        array_:add(sb:toString()) 
+		utils:generteAsyncTask(context, updateappfiles2, olddata, array_)
+	else
+		arruserdata = fh:readFromFile(context, 'userdata.dat')
+		for idx = 0, arruserdata:size() - 1 ,  1 do
+			linesplited = utils:split(arruserdata:get(idx), ';') 
+            if linesplited:get(0) == localappname then
+                arrsession:add(linesplited:get(1) .. ';' .. linesplited:get(0) .. '.' .. linesplited:get(1) .. ';' .. linesplited:get(3))
+            end
+		end 
+		context:openSession(localappname, parser:parserArrayListObjectToArrayListString(arrsession)) 
+	end
+end

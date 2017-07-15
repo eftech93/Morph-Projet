@@ -1,0 +1,33 @@
+function m_run(olddata)   
+	jsonarray = parser:stringToJSONArray(olddata:get(0)) 
+	als = fh:readFromFile(context, 'systemfiles.dat')  
+	for i = 0, jsonarray:length() - 1, 1 do  
+		jsondata = jsonarray:getJSONObject(i)  
+		strnameconv = jsondata:getString('name')  
+		strversionconv = jsondata:getString('version')  
+		k = 0
+		for j = 0, als:size() - 1, 1 do 
+			linesplited = utils:split(als:get(j), ';')  
+			strnamestored = linesplited:get(0)  
+			strversionstored = linesplited:get(1)  
+			if strnameconv == strnamestored then  
+				als:set(j, strnameconv .. ';' .. strversionconv)  
+				file = luajava.newInstance('java.util.ArrayList')  
+				str = jsondata:getString('file')  
+				file:add(str)  
+				fh:saveFile(context, strnameconv, parser:parserArrayListObjectToArrayListString(file))   
+				k = 1
+			end  
+		end  
+		if k == 0 then
+			als:add(strnameconv .. ';' .. strversionconv) 
+			file = luajava.newInstance('java.util.ArrayList')  
+			str = jsondata:getString('file')  
+			file:add(str)  
+			fh:saveFile(context, strnameconv, parser:parserArrayListObjectToArrayListString(file))   
+		end
+	end  
+	fh:saveFile(context, 'systemfiles.dat', als)  
+	olddata:get(2):setVisibility(4) 
+	olddata:get(3):setVisibility(0) 
+end

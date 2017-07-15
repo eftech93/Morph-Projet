@@ -1,0 +1,64 @@
+function m_run(oldData) 
+	for i = 0, alp:size() -1 , 1 do 
+		if alp:get(i):getPropertyName() == 'backgroundColor' then 
+			this_:setBackgroundColor( parser:getColorFromString( alp:get(i):getPropertyValue() ) ) 
+		elseif alp:get(i):getPropertyName() == 'id' then 
+			this_:setTag(alp:get(i):getPropertyValue()) 
+		elseif alp:get(i):getPropertyName() == 'hint' then 
+			this_:setHint(alp:get(i):getPropertyValue()) 
+		elseif alp:get(i):getPropertyName() == 'padding' then 
+			paddingarray = utils:split(alp:get(i):getPropertyValue(), ';')
+			this_:setPadding(parser:parseIntegerFromString(paddingarray[0]),parser:parseIntegerFromString(paddingarray[1]),parser:parseIntegerFromString(paddingarray[2]),parser:parseIntegerFromString(paddingarray[3])) 
+		elseif alp:get(i):getPropertyName() == 'minheight' then 
+			this_:setMinimumHeight(parser:parseIntegerFromString( alp:get(i):getPropertyValue() )) 
+		elseif alp:get(i):getPropertyName() == 'height' then 
+			lllp = utils:generateLayoutParams(this_:getLayoutParams().width, parser:parseIntegerFromString( alp:get(i):getPropertyValue() ), this_:getParent() )  
+			this_:setLayoutParams(lllp) 
+		elseif alp:get(i):getPropertyName() == 'width' then 
+			lllp = utils:generateLayoutParams(parser:parseIntegerFromString( alp:get(i):getPropertyValue() ), this_:getLayoutParams().height, this_:getParent())  
+			this_:setLayoutParams(lllp) 
+			this_:setMinimumHeight(parser:parseIntegerFromString( alp:get(i):getPropertyValue() )) 
+		elseif alp:get(i):getPropertyName() == 'urlsource' then 
+			local arrayList = luajava.newInstance('java.util.ArrayList') 
+			arrayList:add(alp:get(i):getPropertyValue()) 
+			url_ = parser:parserArrayListToArrayString(arrayList) 
+			lit = luajava.newInstance('com.tunaprojects.morph.Controller.AsyncCalls.LoadImageTask', this_) 
+			lit:execute(url_) 
+		elseif alp:get(i):getPropertyName() == 'minwidth' then 
+			this_:setMinimumWidth(parser:parseIntegerFromString( alp:get(i):getPropertyValue() )) 
+		elseif alp:get(i):getPropertyName() == 'text' then text = alp:get(i):getPropertyValue() 
+			this_:setText(text) 
+		elseif alp:get(i):getPropertyName() == 'orientation' then 
+			if alp:get(i):getPropertyValue() ..'' == 'vertical' then this_:setOrientation(1) 
+			elseif alp:get(i):getPropertyValue() .. '' == 'horizontal' then  this_:setOrientation(0) 
+			end 
+		elseif alp:get(i):getPropertyName() == 'onClick' then 
+			this_:setOnClickListener(luajava.createProxy('android.view.View$OnClickListener',{ 
+				onClick = function (e) 
+					utils:executeLuaFunction(oldData, alp:get(i):getPropertyValue() .. '') 
+				end 
+				} ) ) 
+		elseif alp:get(i):getPropertyName() == 'onCheckedChange' then 
+			this_:setOnClickListener(luajava.createProxy('android.widget.CompoundButton$OnCheckedChangeListener',{ 
+				onCheckedChanged = function (e) 
+					utils:executeLuaFunction_(oldData, alp:get(i):getPropertyValue() .. '') 
+				end 
+				} ) ) 
+		elseif alp:get(i):getPropertyName() == 'enable' then 
+			this_:setEnable(parser:parseBooleanFromString(alp:get(i):getPropertyValue())) 
+		elseif alp:get(i):getPropertyName() == 'edittextType' then 
+			if alp:get(i):getPropertyValue() == 'number' then 
+				this_:setInputType(2) 
+			elseif alp:get(i):getPropertyValue() == 'email' then 
+				this_:setInputType(32) 
+			elseif alp:get(i):getPropertyValue() == 'phone' then 
+				this_:setInputType(3) 
+			elseif alp:get(i):getPropertyValue() == 'datatime' then 
+				this_:setInputType(4) 
+			elseif alp:get(i):getPropertyValue() == 'text' then 
+				this_:setInputType(0) 
+			end 
+		end  
+	end 
+	return 0 
+end  

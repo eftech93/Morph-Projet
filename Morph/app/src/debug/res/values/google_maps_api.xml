@@ -1,0 +1,21 @@
+<resources>
+    <!--
+    TODO: Before you run your application, you need a Google Maps API key.
+
+    To get one, follow this link, follow the directions and press "Create" at the end:
+
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=52:AA:42:01:EC:DC:62:7F:48:40:C2:2E:43:04:7D:69:59:7B:BD:4D%3Bcom.tunaprojects.morph.View.Bases
+
+    You can also add your credentials to an existing key, using this line:
+    52:AA:42:01:EC:DC:62:7F:48:40:C2:2E:43:04:7D:69:59:7B:BD:4D;com.tunaprojects.morph.View.Bases
+
+    Alternatively, follow the directions here:
+    https://developers.google.com/maps/documentation/android/start#get-key
+
+    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
+    string in this file.
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        YOUR_KEY_HERE
+    </string>
+</resources>

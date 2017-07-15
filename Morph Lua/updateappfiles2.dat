@@ -1,0 +1,42 @@
+function m_run(olddata)   
+	jsonarray = parser:stringToJSONArray(olddata:get(0)) 
+	als = fh:readFromFile(context, 'userdata.dat') 
+	arrsession = luajava.newInstance('java.util.ArrayList')
+	localappname = ''
+	for i = 0, jsonarray:length() - 1, 1 do  
+		jsondata = jsonarray:getJSONObject(i) 
+		strnameconv = jsondata:getString('name') 
+		if i == 0 then
+			localappname = jsondata:getString('name')
+		end
+		stractivityname = jsondata:getString('activityname') 
+		strversionconv = jsondata:getString('version') 
+		strtypeconv = jsondata:getString('type') 
+		for j = 0, als:size() - 1, 1 do 
+			linesplited = utils:split(als:get(j), ';') 
+			strnamestored = linesplited:get(0) 
+			stractivitystored = linesplited:get(1) 
+			strversionstored = linesplited:get(2) 
+			if strnameconv == strnamestored then  
+				if stractivityname == stractivitystored then
+					als:set(j, strnameconv .. ';' .. stractivityname  ..';' .. strversionconv .. ';' .. strtypeconv)  
+					file = luajava.newInstance('java.util.ArrayList')  
+					str = jsondata:getString('file')  
+					file:add(str)  
+					fh:saveFile(context, strnameconv, parser:parserArrayListObjectToArrayListString(file))   
+				end
+			end  
+		end  
+	end  
+    fh:saveFile(context, 'userdata.dat', parser:parserArrayListObjectToArrayListString(als)) 
+    arruserdata = fh:readFromFile(context, 'userapps.dat') 
+	for idx = 0, arruserdata:size() - 1 ,  1 do
+		linesplited = utils:split(arruserdata:get(idx), ';') 
+		if linesplited:get(idx) == localappname then
+			arrsession:add(arruserdata:get(idx))
+		end
+	end 
+	context:openSession(localappname, parser:parserArrayListObjectToArrayListString(arrsession)) 
+    olddata:get(2):setVisibility(4) 
+    olddata:get(3):setVisibility(0) 
+end

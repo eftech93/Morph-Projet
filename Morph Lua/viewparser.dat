@@ -1,0 +1,26 @@
+function m_run(vc) 
+	local this_ = vc:get(0):getTclass() 
+	local v 
+	if this_ == 'TextView' then 
+		v = luajava.newInstance('android.widget.TextView', context) 
+	elseif this_ == 'Button' then 
+		v = luajava.newInstance('android.widget.Button', context) 
+	elseif this_ == 'FloatingActionButton' then 
+		v = luajava.newInstance('android.support.design.widget.FloatingActionButton', context) 
+	elseif this_ == 'Switch' then 
+		v = luajava.newInstance('android.widget.Switch', context) 
+	elseif this_ == 'EditText' then 
+		v = luajava.newInstance('android.widget.EditText', context) 
+	elseif this_ == 'LinearLayout' then 
+		v = luajava.newInstance('android.widget.LinearLayout', context) 
+		for i = 0, vc:get(0):getChilds():size() - 1, 1 do 
+			local rep = luajava.newInstance('com.tunaprojects.morph.Controller.Parser.ViewPreparer') 
+			local child = vc:get(0):getChilds():get(i) 
+			view = rep:generateBaseElement(context, child, vc:get(1)) 
+			v:addView(view) 
+		end 
+	elseif this_  == 'ImageView' then 
+		v = luajava.newInstance('android.widget.ImageView', context) 
+	end 
+	return v 
+end 
