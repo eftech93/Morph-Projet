@@ -1,6 +1,7 @@
 package com.tunaprojects.morph.Controller.View;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.tunaprojects.morph.Controller.Parser.ViewPreparer;
@@ -21,17 +22,21 @@ class B2ACLoadType1 {
         this.activity = activity;
     }
 
-    protected void loadType1(ArrayList<TObject> alvca, ArrayList oldData) {
+    protected ArrayList<View> loadType1(ArrayList<TObject> alvca, ArrayList oldData) {
+        ArrayList<View> alv = new ArrayList<>();
         this.activity.setContentView(R.layout.activity_base2);
         LinearLayout rl = (LinearLayout) this.activity.findViewById(R.id.activity_base2);
         LinearLayout ll = (LinearLayout) rl.findViewById(R.id.content_base);
+        ViewPreparer vp = ViewPreparer.getInstance();
         for (TObject vc :
                 alvca) {
             if (this.view.contains(vc.getTclass())) {
-                ViewPreparer vp = ViewPreparer.getInstance();
-                ll.addView(vp.generateBaseElement(this.activity, vc, oldData));
+                View v = vp.generateBaseElement(this.activity, vc, oldData);
+                alv.add(v);
+                ll.addView(v);
             }
         }
+        return alv;
     }
 
 }

@@ -1,0 +1,20 @@
+function m_run(olddata) 
+	id = olddata:get(0)
+	property = olddata:get(1)
+	if property == nil then
+		return ''
+	end
+	for i=0, alviews:size() -1 , 1 do
+		v = alviews:get(i)
+		if v:getTag() ~= nil then
+            if v:getTag() == id then
+				if property == 'text' then
+					return v:getText()
+				elseif property == 'check' then
+					return v:isChecked()
+				end
+			end
+		end
+	end
+	return ''
+end

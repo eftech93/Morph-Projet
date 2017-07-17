@@ -11,9 +11,10 @@ public class Base2Activity extends AbstractActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        b2ac = new Base2ActivityController(this);
-        b2ac.start(getIntent());
+        this.b2ac = new Base2ActivityController(this);
+        this.b2ac.start(getIntent());
     }
+
 
     /**
      * This function calls the method newPage of Base2ActivityController
@@ -30,6 +31,10 @@ public class Base2Activity extends AbstractActivity {
      */
     public void loadContent(String pageName, ArrayList oldData) {
         this.b2ac.loadContent(pageName);
+    }
+
+    public String getElementValue(String id, String property){
+        return this.b2ac.getElementValue(id, property);
     }
 
     @Override

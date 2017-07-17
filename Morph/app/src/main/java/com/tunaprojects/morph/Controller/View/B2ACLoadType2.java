@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
 import com.tunaprojects.morph.Controller.AsyncCalls.LoadImageTask;
@@ -29,27 +31,34 @@ class B2ACLoadType2 {
     private final ArrayList<String> containers;
     private final ArrayList<String> view;
     private final Activity activity;
+    private final ArrayList<View> alviews;
     public B2ACLoadType2(ArrayList<String> elements, ArrayList<String> containers, ArrayList<String> view, Activity activity){
         this.elements = elements;
         this.containers = containers;
         this.view = view;
         this.activity = activity;
+        this.alviews = new ArrayList<>();
     }
-    protected void loadType2_0(ArrayList<TObject> alvca0, ArrayList oldData) {
+
+    protected ArrayList<View> loadType2_0(ArrayList<TObject> alvca0, ArrayList oldData) {
         DrawerLayout dr = (DrawerLayout) this.activity.findViewById(R.id.drawer_layout);
         if (!alvca0.isEmpty()) {
             LinearLayout ll = (LinearLayout) dr.findViewById(R.id.content_base);
             ll.removeAllViews();
+            this.alviews.clear();
+            ViewPreparer vp = ViewPreparer.getInstance();
             for (TObject vc :
                     alvca0) {
                 if (this.view.contains(vc.getTclass())) {
-                    ViewPreparer vp = ViewPreparer.getInstance();
-                    ll.addView(vp.generateBaseElement(this.activity, vc, oldData));
+                    View v = vp.generateBaseElement(this.activity, vc, oldData);
+                    this.alviews.add(v);
+                    ll.addView(v);
                 }
             }
         }
+        return alviews;
     }
-    void loadType2(final ArrayList<TObject> alvca0, final ArrayList<TObject> alvca2, final ArrayList<TObject> alvca3, ArrayList oldData) {
+    protected ArrayList<View> loadType2(final ArrayList<TObject> alvca0, final ArrayList<TObject> alvca2, final ArrayList<TObject> alvca3, ArrayList oldData) {
         this.activity.setContentView(R.layout.activity_navegation_base);
         Toolbar toolbar = (Toolbar) this.activity.findViewById(R.id.toolbar);
         DrawerLayout dr = (DrawerLayout) this.activity.findViewById(R.id.drawer_layout);
@@ -57,12 +66,10 @@ class B2ACLoadType2 {
                 this.activity, dr, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         dr.setDrawerListener(toggle);
         toggle.syncState();
-        Log.e("Type 2", "-------------0 size " + alvca0.size());
         loadType2_0(alvca0, oldData);
-        Log.e("Type 2", "-------------2 size " + alvca2.size());
         loadType2_2(alvca2, oldData);
-        Log.e("Type 2", "-------------3 size "+ alvca0.size());
         loadType2_3(alvca3, oldData);
+        return alviews;
     }
 
     private void loadType2_2(ArrayList<TObject> alvca2, ArrayList oldData) {
@@ -70,8 +77,8 @@ class B2ACLoadType2 {
         NavigationView nv = (NavigationView) dr.findViewById(R.id.nav_view);
         LinearLayout ll = new LinearLayout(this.activity);
         ll.setBackgroundColor(Color.DKGRAY);
+        ViewPreparer vp = ViewPreparer.getInstance();
         for (TObject vc : alvca2) {
-            ViewPreparer vp = ViewPreparer.getInstance();
             ll.addView(vp.generateBaseElement(this.activity, vc, oldData));
         }
         nv.addHeaderView(ll);

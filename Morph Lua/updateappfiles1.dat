@@ -41,7 +41,7 @@ function m_run(olddata)
             if j ~=  w then  
            		sb:append(',') 
             end  
-		end 
+		end 		
 		array_ = luajava.newInstance('java.util.ArrayList')  
         array_:add('https://tryxml.000webhostapp.com/morph-test/testing.php')  
 		array_:add('act=bsaa')  

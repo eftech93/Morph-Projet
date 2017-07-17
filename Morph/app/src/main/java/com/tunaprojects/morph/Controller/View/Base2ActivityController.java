@@ -2,6 +2,8 @@ package com.tunaprojects.morph.Controller.View;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.tunaprojects.morph.Controller.File.FileHandler;
 import com.tunaprojects.morph.Controller.Parser.XmlParser;
@@ -10,6 +12,7 @@ import com.tunaprojects.morph.Model.Instance.Property;
 import com.tunaprojects.morph.Model.Instance.TObject;
 import com.tunaprojects.morph.Model.Session.Session;
 import com.tunaprojects.morph.Controller.Dialog.SuperDialog;
+import com.tunaprojects.morph.R;
 import com.tunaprojects.morph.View.AbstractActivity;
 import com.tunaprojects.morph.View.Bases.Base2Activity;
 
@@ -27,15 +30,21 @@ public class Base2ActivityController {
     private final B2ACLoadType2 b2aclbt2;
     private final ArrayList oldData = new ArrayList();
     private Property filename;
+    private ArrayList<View> alviews;
 
     public Base2ActivityController(AbstractActivity c) {
         this.activity = c;
         ArrayList elements = FileHandler.readFromFile(this.activity, "elements.dat");
         ArrayList containers = FileHandler.readFromFile(this.activity, "containers.dat");
         ArrayList views = FileHandler.readFromFile(this.activity, "view.dat");
+        this.alviews = new ArrayList<>();
         this.xp = new XmlParser(containers, elements);
         this.b2aclbt1 = new B2ACLoadType1(views, this.activity);
         this.b2aclbt2 = new B2ACLoadType2(elements, containers, views, this.activity);
+    }
+
+    public String getElementValue(String id, String property) {
+        return Base2ActivityPropertyGetter.getElementProperty(this.activity, this.alviews, id, property);
     }
 
     /**
@@ -155,7 +164,7 @@ public class Base2ActivityController {
             String xml = Utils.join(als, "");
             ArrayList<TObject>[] alvca = this.xp.docParser(this.activity, xml);
             if (loadType == 2) {
-                this.b2aclbt2.loadType2_0(alvca[0], oldData);
+                this.alviews = this.b2aclbt2.loadType2_0(alvca[0], oldData);
             }
         } else {
             SuperDialog.createToastMessage(this.activity, "Activity not found " + pageName);
@@ -172,10 +181,10 @@ public class Base2ActivityController {
         //2 - left bar top
         //3 - left bar bottom
         if (!alvca[0].isEmpty() && alvca[2].isEmpty() && alvca[3].isEmpty()) {
-            this.b2aclbt1.loadType1(alvca[0], oldData);
+            alviews = this.b2aclbt1.loadType1(alvca[0], oldData);
             loadType = 1;
         } else if (!alvca[2].isEmpty() && !alvca[3].isEmpty()) {
-            this.b2aclbt2.loadType2(alvca[0], alvca[2], alvca[3], oldData);
+            alviews.addAll(this.b2aclbt2.loadType2(alvca[0], alvca[2], alvca[3], oldData));
             loadType = 2;
         }
         //ExecuteLua.closeAllState();

@@ -23,7 +23,7 @@ function m_run(olddata)
 					file = luajava.newInstance('java.util.ArrayList')  
 					str = jsondata:getString('file')  
 					file:add(str)  
-					fh:saveFile(context, strnameconv, parser:parserArrayListObjectToArrayListString(file))   
+					fh:saveFile(context, jsondata:getString('name')  .. '.' ..jsondata:getString('activityname') , parser:parserArrayListObjectToArrayListString(file))   
 				end
 			end  
 		end  

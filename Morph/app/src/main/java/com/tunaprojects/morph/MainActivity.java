@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.tunaprojects.morph.Controller.AsyncCalls.LoadImageTask;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         TextView tv1 = new TextView(this);
         tv1.setText("Mundo hola");
         tv1.setOnClickListener(new View.OnClickListener() {
@@ -98,8 +100,6 @@ public class MainActivity extends AppCompatActivity {
                 SuperDialog.openChildViewAsDialog(MainActivity.this, view, this);
                 view.setTag("Id");
                 SuperDialog.createToastMessage(MainActivity.this, view.getTag().toString() + "");
-                ///TestingXmlToJson txtj = new TestingXmlToJson();
-                //txtj.convert();
             }
         });
         ll.addView(ov);

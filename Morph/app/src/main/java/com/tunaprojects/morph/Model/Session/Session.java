@@ -2,10 +2,12 @@ package com.tunaprojects.morph.Model.Session;
 
 import android.content.Context;
 import android.content.Intent;
+
 import com.tunaprojects.morph.Model.Instance.Property;
 import com.tunaprojects.morph.Model.Instance.PropertyValue;
 import com.tunaprojects.morph.Model.Instance.TObject;
 import com.tunaprojects.morph.View.Bases.Base2Activity;
+
 import java.util.ArrayList;
 
 /**
@@ -15,6 +17,14 @@ import java.util.ArrayList;
 public class Session {
     private static Session instance = null;
     private ArrayList<TObject> elements = null;
+    private static ArrayList<String> elementsNotAllowed = new ArrayList() {{
+        add("");
+        add("activity");
+        add("name");
+        add("filename");
+        add("type");
+        add("app");
+    }};
 
     private Session() {
         this.elements = new ArrayList<>();
@@ -65,6 +75,14 @@ public class Session {
 
     public void addElement(TObject tObject) {
         this.elements.add(tObject);
+    }
+
+    public void addElement(String name, final Object value) {
+        if (!elementsNotAllowed.contains(name.toLowerCase())) {
+            this.elements.add(new TObject(name, new ArrayList<Property>() {{
+                add(new Property("value", new PropertyValue(value)));
+            }}, new ArrayList<TObject>()));
+        }
     }
 
     public static Session getInstance() {

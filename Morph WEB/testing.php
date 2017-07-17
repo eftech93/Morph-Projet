@@ -88,7 +88,23 @@ if(isset($_POST['act'])){
 						}
 				}
 			}else if ($act=="bsaa") { //bring some activity app 
-				//check bssf
+				if(isset($_POST['bring'])){
+					$bring_unprotected = $_POST['bring'];	
+						if(is_string($bring_unprotected)){
+							$sql = "SELECT a.name, af.activityname, af.version, aty.type, af.xml as file FROM app a INNER JOIN activity act ON a.name = act.appname INNER JOIN activitytype aty on act.idactivitytype = aty.idactivitytype RIGHT JOIN activityfile af on af.appname = a.name and af.activityname = act.activityname WHERE af.version in (SELECT MAX(af_.version) from activityfile af_ where af.appname = af_.appname and af.activityname = af_.activityname) and FIND_IN_SET(concat(af.appname,'.', af.activityname) , '" . $bring_unprotected . "') ";
+
+							$result = $conn->query($sql);
+							if ($result->num_rows > 0) {
+								$output = array();
+								while($row = $result->fetch_assoc()) {
+									$output[] = $row;
+								}
+								echo json_encode($output);
+							} else {
+								echo "";
+							}
+						}
+				}
 			}else if($act==="anvaa"){//add new version of an activty app
 				
 			}else if($act==="soi"){// Store object information
