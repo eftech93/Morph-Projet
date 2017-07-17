@@ -10,10 +10,16 @@ import android.widget.Toast;
 
 /**
  * Created by Esteban Puello on 25/10/2016.
+ *
+ * This class is user in order to handle all kinds of dialogs
  */
 
 public class SuperDialog {
 
+    /**
+     * Constructor, it's usually used when updating lua's globals
+     * for being used on lua
+     */
     public SuperDialog() {
     }
 
@@ -49,6 +55,7 @@ public class SuperDialog {
     public static void createLogMessage(String tag, StringBuilder message) {
         Log.i(tag, message.toString());
     }
+
 
     public static void createToastMessage(Context x, String message, int dur) {
         if (dur < 0 || dur > 1) {
@@ -128,6 +135,14 @@ public class SuperDialog {
         return ad;
     }
 
+    /**
+     *
+     * @param x
+     * @param title
+     * @param view
+     * @param yes
+     * @param no
+     */
     public static void openDialogCustomYesNo(Context x, String title, View view, DialogInterface.OnClickListener yes, DialogInterface.OnClickListener no) {
         new AlertDialog.Builder(x)
                 .setTitle(title)
@@ -137,6 +152,13 @@ public class SuperDialog {
                 .show();
     }
 
+    /**
+     * This function will open a view as a Dialog
+     * @param x Activity
+     * @param title Tittle to be shown
+     * @param view The view that will be shown
+     * @return AlertDialog object -the dialog it's opened-
+     */
     public static AlertDialog openDialog(Context x, String title, View view) {
         return new AlertDialog.Builder(x)
                 .setTitle(title)
@@ -145,6 +167,13 @@ public class SuperDialog {
     }
 
 
+    /**
+     *
+     * @param x
+     * @param title
+     * @param view
+     * @return
+     */
     public static AlertDialog.Builder openNoCancelableDialog(Context x, String title, View view) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(x);
         alertDialog.setCancelable(false);

@@ -20,6 +20,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Esteban Puello on 1/12/2016.
+ *
+ * This class allows user to do async calls to a server (POST)
  */
 
 public class AsyncUrlCall extends AsyncTask<String, Void, String> {
@@ -34,15 +36,18 @@ public class AsyncUrlCall extends AsyncTask<String, Void, String> {
         this.al = al;
     }
 */
+
+    /**
+     * The class constructor
+     * @param context Activity in which the class will be created
+     * @param lua This parameter is the lua that will be executed when the response is got
+     * @param al a list of parameters (including the url) that will be sent by POST
+     */
     public AsyncUrlCall(Context context, String lua, ArrayList al) {
         this.pd = new ProgressDialog(context);
         this.lua = lua;
         this.al = al;
         this.context = context;
-    }
-
-    public void runthis(ArrayList args) {
-        execute(Parser.parserArrayListToArrayString(args));
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Esteban Puello on 25/11/2016.
+ * This class parse the XML into an ArrayList of TOject
  */
 public class XmlParser {
 

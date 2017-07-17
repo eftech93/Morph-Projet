@@ -2,6 +2,7 @@ package com.tunaprojects.morph.Controller.AsyncCalls;
 
 /**
  * Created by Esteban Puello on 28/11/2016.
+ * This class allows user to load an image from internet into a ImageView object
  */
 
 import android.content.Context;
@@ -22,10 +23,19 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
     private Context c;
     private MenuItem mi;
 
+    /**
+     * Using this constructor the image will be loaded on the image view
+     * @param iv ImageView instance
+     */
     public LoadImageTask(ImageView iv) {
         this.iv = iv;
     }
 
+    /**
+     * Using this constructor the image will be loaded on a menuitem
+     * @param c Activity in which the class is used
+     * @param mi MenuItem in which the image will be loaded
+     */
     public LoadImageTask(Context c, MenuItem mi) {
         this.c = c;
         this.mi = mi;

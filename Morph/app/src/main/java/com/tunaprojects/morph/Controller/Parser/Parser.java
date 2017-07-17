@@ -16,13 +16,15 @@ import java.util.Arrays;
 
 /**
  * Created by Esteban Puello on 25/11/2016.
+ * This class allows users to do differents types of parsing
+ * that are pretty difficult on lua
  */
 public class Parser {
 
     /**
      * This function parse a string to color
      * @param color this string is the color (#FFFFFF or 0;0;0)
-     * @return
+     * @return an integer, whether can't be parsed a -1 it's sent
      */
     public static int getColorFromString(String color) throws ParserError {
         /*
@@ -54,7 +56,7 @@ public class Parser {
      * @param green green color from 0 - 254
      * @param blue blue color from 0 - 254
      * @param prtage changing porcentage
-     * @return
+     * @return an integer
      */
     public static int parseColorFromInteger(int red, int green, int blue, float prtage) {
         return Color.rgb((int) (red * prtage), (int) (green * prtage), (int) (blue * prtage));
@@ -89,15 +91,31 @@ public class Parser {
         }
     }
 
+    /**
+     * This fonction parse an ArrayList into Stirng[]
+     * @param al ArrayList
+     * @return
+     */
     public static String[] parserArrayListToArrayString(ArrayList al) {
         String[] re = Arrays.copyOf(al.toArray(), al.size(), String[].class);
         return re;
     }
 
+    /**
+     * This function created an ArrayAdapter for a dropdown item
+     * @param context Activity
+     * @param als ArrayList of Strings to be added on the adapter
+     * @return ArraAdapter with the items of the arraylist
+     */
     public static ArrayAdapter<String> getArrayAdapter(Context context, ArrayList<String> als) {
         return new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, als.toArray(new String[]{}));
     }
 
+    /**
+     * ArrayList of objects into an ArrayList of String, this function uses the toString object function
+     * @param objl ArrayList of object
+     * @return whether an object is null, it will add a null reference to the list
+     */
     public static ArrayList<String> parserArrayListObjectToArrayListString(ArrayList objl) {
         ArrayList<String> strings = new ArrayList();
         for (Object object : objl) {
@@ -110,6 +128,11 @@ public class Parser {
         return obj.toString();
     }
 
+    /**
+     * Parse a string into a JSONArray
+     * @param obj String object to be parsed
+     * @return if the String can't be parsed, a null reference is returned
+     */
     public static JSONArray stringToJSONArray(String obj) {
         try {
             return new JSONArray(obj);
@@ -118,6 +141,12 @@ public class Parser {
         }
     }
 
+    /**
+     * This function tries to get a JSONObject from a JSONArray using an index
+     * @param jsonarray JSONArray
+     * @param index
+     * @return If the JSONObject can't be created, a null reference is sent
+     */
     public static JSONObject getJSONObject(JSONArray jsonarray, int index) {
         try {
             return jsonarray.getJSONObject(index);

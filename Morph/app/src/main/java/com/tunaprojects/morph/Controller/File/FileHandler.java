@@ -22,8 +22,10 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * Created by Esteban Puello on 5/08/2016.
+ * This class handle the files created, read and write
  */
 public class FileHandler {
+
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
@@ -35,11 +37,16 @@ public class FileHandler {
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
+    /**
+     * This function reads a file
+     * @param context Activity
+     * @param filename file name that will be read
+     * @return ArraList of string of each line
+     */
     public static ArrayList<String> readFromFile(Context context, String filename) {
         ArrayList<String> result = new ArrayList<>();
         try {
             InputStream inputStream = context.openFileInput(filename);
-
             if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -58,6 +65,11 @@ public class FileHandler {
 
     private static final String KEY = "Ix2pH3ASxMeP9tKmNWkP4(/Gm4&CkU4K";
 
+    /**
+     * No implemented yet
+     * @param str
+     * @return
+     */
     private static byte[] cipher(String str) {
         try {
             Key aesKey = new SecretKeySpec(KEY.getBytes("UTF-8"), "AES");
@@ -70,6 +82,11 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Not implemented yet
+     * @param str
+     * @return
+     */
     private static byte[] decipher(byte[] str) {
         try {
             Key aesKey = new SecretKeySpec(KEY.getBytes("UTF-8"), "AES");
@@ -82,6 +99,11 @@ public class FileHandler {
         }
     }
 
+    /**
+     * Not implemented yet
+     * @param str
+     * @return
+     */
     private static byte[] stringToBytesUTFCustom(String str) {
         char[] buffer = str.toCharArray();
         byte[] b = new byte[buffer.length << 1];
@@ -93,6 +115,11 @@ public class FileHandler {
         return b;
     }
 
+    /**
+     * Not implemented yet
+     * @param bytes
+     * @return
+     */
     private static String bytesToStringUTFCustom(byte[] bytes) {
         char[] buffer = new char[bytes.length >> 1];
         for (int i = 0; i < buffer.length; i++) {
@@ -103,6 +130,13 @@ public class FileHandler {
         return new String(buffer);
     }
 
+    /**
+     * This functions saves an ArrayList of string into a file
+     * @param context Activity
+     * @param filename File name
+     * @param lines ArrayList of strings with the lines to be stored
+     * @return bool whether or not it was saved
+     */
     public static boolean saveFile(Context context, String filename, ArrayList<String> lines) {
         FileOutputStream outputStream;
         try {
@@ -121,30 +155,41 @@ public class FileHandler {
         }
     }
 
-    public static void writeFile(Context context, String name, String doc) {
+    /**
+     * This function saves a string into a file
+     * @param context Activity
+     * @param filename file name
+     * @param doc string to be written
+     * @return bool whether or not it was saved
+     */
+    public static boolean writeFile(Context context, String filename, String doc) {
         try {
             try {
-                File file = new File(context.getFilesDir(), name);
+                File file = new File(context.getFilesDir(), filename);
                 FileOutputStream outputStream = new FileOutputStream(file);
                 outputStream.write(doc.getBytes());
                 outputStream.close();
+                return true;
             } catch (Exception e) {
-         //       Dialog.showAlert(context, "No se pudo escribir en el archivo");
-                return;
+                return false;
             }
         } catch (Exception e) {
-       //     Dialog.showAlert(context, "No se pudo crear el archivo");
-            return;
+            return false;
         }
-     //   Dialog.showAlert(context, "Archivo creado correctamente");
     }
 
-    public static InputStream getFile(Context context, String name) {
+    /**
+     * This function creates a input stream from a file
+     * @param context Activity
+     * @param filename filename
+     * @return can be a null whether could not create the inputstream object
+     */
+    public static InputStream getFile(Context context, String filename) {
         try {
-            File k = context.getFileStreamPath(name);
+            File k = context.getFileStreamPath(filename);
             return new FileInputStream(k);
         } catch (Exception e) {
-            Dialog.showAlert(context, "Archivo no encontrado " + e.getLocalizedMessage());
+            //Dialog.showAlert(context, "Archivo no encontrado " + e.getLocalizedMessage());
             return null;
         }
     }
