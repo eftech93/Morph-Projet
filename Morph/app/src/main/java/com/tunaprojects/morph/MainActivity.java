@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -12,16 +11,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import android.widget.Switch;
 import android.widget.TextView;
-
 import com.tunaprojects.morph.Controller.AsyncCalls.LoadImageTask;
-import com.tunaprojects.morph.Controller.File.FileHandler;
 import com.tunaprojects.morph.Controller.Dialog.SuperDialog;
 import com.tunaprojects.morph.View.Bases.test;
 import com.tunaprojects.morph.View.StartActivity;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> g = FileHandler.readFromFile(MainActivity.this, "systemfiles.dat");
+                Intent intent = new Intent(MainActivity.this, test.class);
+                startActivity(intent);
+                /*ArrayList<String> g = FileHandler.readFromFile(MainActivity.this, "systemfiles.dat");
                 for (String sr : g) {
                     Log.d("File", "-------------------------------------------------------");
                     Log.d("File", sr);
@@ -79,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("File", "-------------------------------------------------------");
                     Log.d("File", sr);
                 }
-
+*/
             }
         });
 
