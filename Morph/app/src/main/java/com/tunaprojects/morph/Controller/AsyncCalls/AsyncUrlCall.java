@@ -3,6 +3,7 @@ package com.tunaprojects.morph.Controller.AsyncCalls;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.tunaprojects.morph.Controller.Parser.Parser;
@@ -13,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -67,19 +69,9 @@ public class AsyncUrlCall extends AsyncTask<String, Void, String> {
             //Log.e("Async Url", urls[0]);
             conn = (HttpsURLConnection) url.openConnection();
             if (urls.length > 1) {
-                StringBuilder params = new StringBuilder();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-                conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setDoOutput(true);
+                connectionSetProperties(conn);
                 DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-                for (int i = 1; i < urls.length; i++) {
-                    params.append(urls[i]);
-                    if (i != urls.length - 1) {
-                        params.append("&");
-                    }
-                }
+                StringBuilder params = getStringBuilder(urls);
                 //Log.e("Async Params", params.toString());
                 wr.writeBytes(params.toString());
                 wr.flush();
@@ -103,6 +95,26 @@ public class AsyncUrlCall extends AsyncTask<String, Void, String> {
             }
         }
         return result;
+    }
+
+    private void connectionSetProperties(HttpsURLConnection conn) throws ProtocolException {
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+        conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        conn.setDoOutput(true);
+    }
+
+    @NonNull
+    private StringBuilder getStringBuilder(String[] urls) {
+        StringBuilder params = new StringBuilder();
+        for (int i = 1; i < urls.length; i++) {
+            params.append(urls[i]);
+            if (i != urls.length - 1) {
+                params.append("&");
+            }
+        }
+        return params;
     }
 
     @Override

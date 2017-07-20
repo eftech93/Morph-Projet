@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Esteban Puello on 7/07/2017.
+ *
  */
 
 public class StartActivityController {
@@ -86,7 +87,8 @@ public class StartActivityController {
     private void checkApp(String appname) {
         ArrayList<String> als = FileHandler.readFromFile(this.sa, "userapps.dat");
         if (als.contains(appname)) {
-            checkAppIsDownloaded(appname);
+            //checkAppIsDownloaded(appname);
+            SACCheckAppIsDownloaded.checkAppIsDownloaded(this.sa, appname);
         } else {
             checkAppIsNotDownloaded(appname);
         }
@@ -98,7 +100,7 @@ public class StartActivityController {
      *
      * @param appname this parameter is the name of the app
      */
-    private void checkAppIsDownloaded(String appname) {
+  /*  private void checkAppIsDownloaded(String appname) {
         if (Utils.isOnline(this.sa)) {
             makeAsyncServerCall("act=gavaa", appname, "updateappfiles1.dat");
         } else {
@@ -114,14 +116,14 @@ public class StartActivityController {
             openSession(appname, data);
         }
     }
-
+*/
     /**
      * This function updates the globals and do a request to the server
      *
      * @param act     what's going to be done
      * @param appname app's name
      */
-    private void makeAsyncServerCall(String act, String appname, String file) {
+    /*private void makeAsyncServerCall(String act, String appname, String file) {
         al = new ArrayList() {{
             add(tv);
             add(ib);
@@ -130,7 +132,7 @@ public class StartActivityController {
         el.updateGlobalInstances(this.sa);
         AsyncUrlCall auc = new AsyncUrlCall(this.sa, Utils.join(FileHandler.readFromFile(this.sa, file), " "), al);
         auc.execute("https://tryxml.000webhostapp.com/morph-test/testing.php", act, "bring=" + appname);
-    }
+    }*/
 
     /**
      * this method tries to download the data of the app whether it's online, if not, it shows a message
@@ -140,7 +142,11 @@ public class StartActivityController {
     private void checkAppIsNotDownloaded(String appname) {
         //if doesn´t have it, download all data
         if (Utils.isOnline(this.sa)) {
-            makeAsyncServerCall("act=gaaop", appname, "getfirstuserapp.dat");
+            SACMakeAsyncCall.makeAsyncServerCall(this.sa, "act=gaaop", appname, "getfirstuserapp.dat",  new ArrayList() {{
+                add(tv);
+                add(ib);
+                add(ll);
+            }});
         } else {
             //if does not have it, and there's no internet access, show show a message and the refresh button
             SuperDialog.createToastMessage(this.sa, "App not downloaded please connect to internet");
@@ -172,7 +178,6 @@ public class StartActivityController {
 
     private void checkLocalDataInNotOnline(ArrayList<String> systemsilesal) {
         if (systemsilesal.isEmpty()) {
-
             SuperDialog.openDialog(sa, sa.getString(R.string.alert), sa.getString(R.string.no_internet_access));
             this.ib.setVisibility(View.VISIBLE);
             this.ll.setVisibility(View.INVISIBLE);

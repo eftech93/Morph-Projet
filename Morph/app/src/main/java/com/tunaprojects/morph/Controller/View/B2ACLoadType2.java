@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Esteban Puello on 5/07/2017.
+ * Créé pa fabrication pure
  */
 
 class B2ACLoadType2 {
@@ -94,32 +95,40 @@ class B2ACLoadType2 {
         if (!alvca3.isEmpty()) {
             for (TObject vc : alvca3) {
                 // Convertir este codigo a lua
-                for (TObject child : vc.getChilds()) {
-                    MenuItem mi = m.add("");
-                    for (final Property p : child.getProperties()) {
-                        if (p.getPropertyName().contentEquals("text")) {
-                            mi.setTitle(p.getPropertyValue().toString());
-                        } else if (p.getPropertyName().contentEquals("onClick")) {
-                            mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                                @Override
-                                public boolean onMenuItemClick(MenuItem menuItem) {
-                                    ExecuteLua el = ExecuteLua.getInstance();
-                                    el.updateGlobalInstances(activity);
-                                    ArrayList objs_ = new ArrayList();
-                                    objs_.add(oldData);
-                                    Object[] rt = el.executeLuaFunction(objs_, p.getPropertyValue().toString());
-                                    return true;
-                                }
-                            });
-                        } else if (p.getPropertyName().contentEquals("urlicon")) {
-                            LoadImageTask lit = new LoadImageTask(this.activity, mi);
-                            lit.execute(p.getPropertyValue().toString());
-                        }
-                    }
-                }
+                checkChild3(oldData, m, vc);
                 //m.addSubMenu(" ").add(" ");
                 //fin de convertir en convertir en lua
             }
+        }
+    }
+
+    private void checkChild3(final ArrayList oldData, Menu m, TObject vc) {
+        for (TObject child : vc.getChilds()) {
+            MenuItem mi = m.add("");
+            for (final Property p : child.getProperties()) {
+                checkProperty3(oldData, mi, p);
+            }
+        }
+    }
+
+    private void checkProperty3(final ArrayList oldData, MenuItem mi, final Property p) {
+        if (p.getPropertyName().contentEquals("text")) {
+            mi.setTitle(p.getPropertyValue().toString());
+        } else if (p.getPropertyName().contentEquals("onClick")) {
+            mi.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    ExecuteLua el = ExecuteLua.getInstance();
+                    el.updateGlobalInstances(activity);
+                    ArrayList objs_ = new ArrayList();
+                    objs_.add(oldData);
+                    Object[] rt = el.executeLuaFunction(objs_, p.getPropertyValue().toString());
+                    return true;
+                }
+            });
+        } else if (p.getPropertyName().contentEquals("urlicon")) {
+            LoadImageTask lit = new LoadImageTask(this.activity, mi);
+            lit.execute(p.getPropertyValue().toString());
         }
     }
 

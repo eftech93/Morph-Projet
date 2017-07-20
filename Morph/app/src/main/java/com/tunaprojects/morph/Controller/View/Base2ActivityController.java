@@ -3,16 +3,13 @@ package com.tunaprojects.morph.Controller.View;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.tunaprojects.morph.Controller.File.FileHandler;
-import com.tunaprojects.morph.Controller.Parser.XmlParser;
 import com.tunaprojects.morph.Controller.Utility.Utils;
 import com.tunaprojects.morph.Model.Instance.Property;
 import com.tunaprojects.morph.Model.Instance.TObject;
 import com.tunaprojects.morph.Model.Session.Session;
 import com.tunaprojects.morph.Controller.Dialog.SuperDialog;
-import com.tunaprojects.morph.R;
 import com.tunaprojects.morph.View.AbstractActivity;
 import com.tunaprojects.morph.View.Bases.Base2Activity;
 
@@ -20,17 +17,16 @@ import java.util.ArrayList;
 
 /**
  * Created by Esteban Puello on 5/07/2017.
+ * Patron controlleur
  */
 
 public class Base2ActivityController {
     private final AbstractActivity activity;
-    private final XmlParser xp;
-    private int loadType = 0;
-    private final B2ACLoadType1 b2aclbt1;
-    private final B2ACLoadType2 b2aclbt2;
     private final ArrayList oldData = new ArrayList();
     private Property filename;
     private ArrayList<View> alviews;
+    private B2ACLoadFullPage b2aclfp;
+    private B2ACLoadContent b2aclc;
 
     public Base2ActivityController(AbstractActivity c) {
         this.activity = c;
@@ -38,13 +34,12 @@ public class Base2ActivityController {
         ArrayList containers = FileHandler.readFromFile(this.activity, "containers.dat");
         ArrayList views = FileHandler.readFromFile(this.activity, "view.dat");
         this.alviews = new ArrayList<>();
-        this.xp = new XmlParser(containers, elements);
-        this.b2aclbt1 = new B2ACLoadType1(views, this.activity);
-        this.b2aclbt2 = new B2ACLoadType2(elements, containers, views, this.activity);
+        this.b2aclfp = new B2ACLoadFullPage(this.activity, views, elements, containers);
+        this.b2aclc = new B2ACLoadContent(this.activity, views, elements, containers);
     }
 
     public String getElementValue(String id, String property) {
-        return Base2ActivityPropertyGetter.getElementProperty(this.activity, this.alviews, id, property);
+        return B2ACPropertyGetter.getElementProperty(this.activity, this.alviews, id, property);
     }
 
     /**
@@ -55,7 +50,7 @@ public class Base2ActivityController {
     private void loadPage(Property filename) {
         ArrayList<String> als = FileHandler.readFromFile(this.activity, filename.getPropertyValue().toString());
         final String xml = Utils.join(als, "");
-        loadFullPage(xml);
+        this.alviews = this.b2aclfp.loadFullPage(xml, oldData);
     }
 
     /**
@@ -135,7 +130,6 @@ public class Base2ActivityController {
     }
 
     public void newPage(String pageName) {
-
         Intent i = new Intent(this.activity, Base2Activity.class);
         i.putExtra("activity", pageName);
         this.activity.startActivity(i);
@@ -146,48 +140,7 @@ public class Base2ActivityController {
     }
 
     public void loadContent(String pageName) {
-        Session s = Session.getInstance();
-        TObject to = s.getElement("app");
-        String filename = null;
-        for (TObject child : to.getChilds()) {
-            Property p = child.searchPropertyByName("name");
-            if (p != null && p.getPropertyValue().toString().contentEquals(pageName)) {
-                Property p2 = child.searchPropertyByName("filename");
-                if (p2 != null) {
-                    filename = p2.getPropertyValue().toString();
-                    break;
-                }
-            }
-        }
-        if (filename != null) {
-            ArrayList<String> als = FileHandler.readFromFile(this.activity, filename);
-            String xml = Utils.join(als, "");
-            ArrayList<TObject>[] alvca = this.xp.docParser(this.activity, xml);
-            if (loadType == 2) {
-                this.alviews = this.b2aclbt2.loadType2_0(alvca[0], oldData);
-            }
-        } else {
-            SuperDialog.createToastMessage(this.activity, "Activity not found " + pageName);
-        }
-    }
-
-    private void loadFullPage(String xml) {
-        ArrayList<TObject>[] alvca = this.xp.docParser(this.activity, xml);
-        if (alvca.length == 0 || alvca[0].isEmpty() && alvca[1].isEmpty() && alvca[2].isEmpty() && alvca[3].isEmpty()) {
-            this.activity.finish("There's nothing to be loaded");
-        }
-        //0 - content
-        //1 - actionbar
-        //2 - left bar top
-        //3 - left bar bottom
-        if (!alvca[0].isEmpty() && alvca[2].isEmpty() && alvca[3].isEmpty()) {
-            alviews = this.b2aclbt1.loadType1(alvca[0], oldData);
-            loadType = 1;
-        } else if (!alvca[2].isEmpty() && !alvca[3].isEmpty()) {
-            alviews.addAll(this.b2aclbt2.loadType2(alvca[0], alvca[2], alvca[3], oldData));
-            loadType = 2;
-        }
-        //ExecuteLua.closeAllState();
+        this.alviews = this.b2aclc.loadContent(pageName, this.b2aclfp.getLoadType(), this.oldData);
     }
 
 }

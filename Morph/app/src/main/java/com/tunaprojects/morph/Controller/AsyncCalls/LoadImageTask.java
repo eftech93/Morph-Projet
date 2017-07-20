@@ -48,7 +48,7 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
             Bitmap bm = BitmapFactory.decodeStream(is);
             is.close();
             return bm;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -69,6 +69,7 @@ public class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
                 }
             }
         } else {
+            //ajouter d'une image dans le cas où il n'y a pas d'image à charger....
         }
     }
 }

@@ -15,9 +15,10 @@ import java.util.ArrayList;
 
 /**
  * Created by Esteban Puello on 16/07/2017.
+ * Créé par fabrication pure
  */
 
-public class Base2ActivityPropertyGetter {
+public class B2ACPropertyGetter {
     protected static String getElementProperty(Context c, final ArrayList<View> alviews, String id, String property) {
         ArrayList olddata = new ArrayList();
         ExecuteLua el = ExecuteLua.getInstance();
